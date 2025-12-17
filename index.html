@@ -39,7 +39,7 @@
       height: 200%;
       top: -50%;
       left: -50%;
-      background-image: 
+      background-image:
         radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.3), transparent),
         radial-gradient(2px 2px at 60% 70%, rgba(255,255,255,.2), transparent),
         radial-gradient(1px 1px at 50% 50%, rgba(255,255,255,.25), transparent),
@@ -61,7 +61,7 @@
       background: linear-gradient(145deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,.03) 100%);
       border-radius: var(--radius);
       overflow:hidden;
-      box-shadow: 
+      box-shadow:
         0 30px 90px rgba(0,0,0,.5),
         0 0 1px rgba(255,255,255,.1) inset,
         0 1px 0 rgba(255,255,255,.05) inset;
@@ -151,10 +151,6 @@
       padding:24px;
       box-shadow: 0 8px 24px rgba(0,0,0,.2);
     }
-
-    .bouquet{ width:100%; height:auto; display:block; filter: drop-shadow(0 10px 20px rgba(0,0,0,.3)); }
-    .float{ animation: floaty 4s ease-in-out infinite; transform-origin:center; }
-    @keyframes floaty{ 0%,100%{ transform: translateY(0) rotate(0deg) } 50%{ transform: translateY(-10px) rotate(2deg) } }
 
     .galleryWrap{ display:grid; grid-template-columns: 1fr; gap: 20px; align-items:center; }
     .photoFrame{
@@ -295,6 +291,48 @@
       75% { margin-left: -25px; }
       23% { margin-left: -25px; } /* lo dejé tal cual venía */
     }
+
+    /* ====== RESPONSIVE (Android + iPhone) ====== */
+    @media (max-width: 600px){
+      body{
+        display:block;         /* evita el centrado tipo “desktop card” */
+        padding:12px;
+      }
+
+      .app{
+        width:100%;
+        border-radius:16px;
+      }
+
+      .screen{ padding:16px; }
+
+      .top{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom:16px;
+      }
+
+      .badge{
+        font-size:12px;
+        padding:6px 10px;
+        white-space: normal;
+      }
+
+      /* Portada: deja de ser fija */
+      .coverGrid img{
+        height:auto !important;
+        max-height:55vh;
+      }
+
+      /* Galería: que no ocupe media vida */
+      .photoFrame{
+        min-height:55vh;
+      }
+
+      .caption{ font-size:14px; padding:14px; }
+      .btn{ width:100%; }
+    }
   </style>
 </head>
 
@@ -314,13 +352,12 @@
 
       <div class="coverGrid">
         <div class="card">
-          <!-- FOTO DE PORTADA (reemplaza el ramo de rosas) -->
           <img
             src="./fotos/portada.jpeg"
             alt="Foto de portada"
             style="
               width:100%;
-              height:520px;
+              height: min(520px, 55vh);
               object-fit:cover;
               border-radius:16px;
               display:block;
@@ -332,7 +369,7 @@
         <div>
           <h2>Leidy Jhoana Sierra Prieto🌹</h2>
           <p>
-            Preparé esto con tiempo porque quería que supieras que aunque las cosas no terminaron como esperaba, 
+            Preparé esto con tiempo porque quería que supieras que aunque las cosas no terminaron como esperaba,
             eres importante para mí y mereces algo bonito en tu día especial.
           </p>
           <div class="btnRow">
@@ -367,7 +404,7 @@
         </div>
 
         <div class="tiny">
-          💡 Tip: Coloca tus fotos en la carpeta <b><fotos></b> con los nombres 1.jpg, 2.jpg, etc.
+          💡 Tip: Coloca tus fotos en la carpeta <b>fotos</b> con los nombres 1.jpg, 2.jpg, etc.
         </div>
       </div>
     </section>
@@ -426,10 +463,8 @@
   </div>
 
 <script>
-  // ---- CONFIG ----
-  const TOTAL = 23; // número total de fotos disponibles
+  const TOTAL = 23;
 
-  // Intentamos cargar .jpg, si falla intentamos .JPG y .jpeg/.JPEG (por si Windows/tu cel guardó distinto)
   function photoPath(n, ext){ return `./fotos/${n}.${ext}`; }
   const exts = ["jpg","JPG","jpeg","JPEG","png","PNG"];
 
@@ -448,12 +483,11 @@
     tryNext();
   }
 
-  // captions: si no hay para todas, muestra "—"
   const captions = [
-    "Los pequeños momentos son los que más valen.", 
+    "Los pequeños momentos son los que más valen.",
     "Tu mirada lo decía todo.",
     "Tu sonrisa iluminaba todo a tu alrededor.",
-    "Esa tarde fue mágica.", 
+    "Esa tarde fue mágica.",
     "Me alegra verte crecer.",
     "Cada paso que das me llena de orgullo.",
     "Tu esfuerzo siempre me inspiró.",
@@ -475,7 +509,6 @@
     "Este es solo el comienzo de grandes cosas para ti."
   ];
 
-  // ---- ELEMENTS ----
   const screenCover  = document.getElementById('screenCover');
   const screenGallery= document.getElementById('screenGallery');
   const screenAsk    = document.getElementById('screenAsk');
@@ -501,7 +534,6 @@
   const finalImgEl = document.getElementById('finalImg');
   const btnRestart = document.getElementById('btnRestart');
 
-  // ---- STATE ----
   let idx = 0;
   let noCount = 0;
 
@@ -511,13 +543,11 @@
     window.scrollTo({top:0, behavior:'smooth'});
   }
 
-  // preload (best effort)
   for(let n=1;n<=TOTAL;n++){
     const tmp = new Image();
     tmp.src = `./fotos/${n}.jpg`;
   }
 
-  // dots
   function renderDots(){
     dotsWrap.innerHTML = "";
     for(let i=0;i<TOTAL;i++){
@@ -532,7 +562,6 @@
     caption.textContent = captions[idx] || "—";
     img.classList.remove('show');
 
-    // Cargar foto (idx empieza en 0, nombre empieza en 1)
     setImageWithFallback(img, idx+1);
 
     img.onload = () => requestAnimationFrame(()=> img.classList.add('show'));
@@ -543,7 +572,6 @@
     btnNext.textContent = (idx === TOTAL-1) ? "Ir al final →" : "Siguiente →";
   }
 
-  // ---- FLOW ----
   btnStart.addEventListener('click', () => {
     show(screenGallery);
     idx = 0;
@@ -567,7 +595,6 @@
     }
   });
 
-  // ---- ASK LOGIC ----
   const noMessages = [
     "Gracias por decirlo con honestidad. De corazón, te deseo un grado precioso 🎓",
     "Lo comprendo. Aun así, me alegra haber compartido esto contigo. Mereces cosas bonitas.",
@@ -600,11 +627,9 @@
         "Repito nuevamente estamos orgullosos de ti por tu titulo obtenido con muchisimo esfuerzo🎓. " +
         "Ojalá la vida te abrace bonito… y si me permites, yo también quisiera intentarlo con madurez, paso a paso.";
 
-      // final.jpg opcional con fallback a la última
       const tryFinal = new Image();
       tryFinal.onload = () => { finalImgEl.src = "./fotos/final.jpg"; };
-      tryFinal.onerror = () => { 
-        // usa la última foto existente
+      tryFinal.onerror = () => {
         setImageWithFallback(finalImgEl, TOTAL);
       };
       tryFinal.src = "./fotos/final.jpg";
@@ -628,7 +653,6 @@
     show(screenCover);
   });
 
-  // ===== PÉTALOS CON MENSAJES =====
   const petalsContainer = document.getElementById('petalsContainer');
   const sweetMessages = [
     "¡Felicidades! 🎓",
