@@ -1,10 +1,696 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Mi página</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>💛CON CARIÑO💛</title>
+  <style>
+    :root{
+      --bg1:#0a0e1a;
+      --bg2:#1a1f35;
+      --card: rgba(255,255,255,.05);
+      --stroke: rgba(255,255,255,.1);
+      --text:#f8f9ff;
+      --muted: rgba(255,255,255,.7);
+      --accent:#ff3366;
+      --accent2:#ffd700;
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      min-height:100vh;
+      background:
+        radial-gradient(ellipse 1400px 1000px at 20% 10%, rgba(138,43,226,.15) 0%, transparent 60%),
+        radial-gradient(ellipse 1200px 900px at 80% 5%, rgba(255,51,102,.12) 0%, transparent 55%),
+        linear-gradient(165deg, var(--bg1), var(--bg2) 50%, #141829);
+      display:grid;
+      place-items:center;
+      padding:20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background-image: 
+        radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.3), transparent),
+        radial-gradient(2px 2px at 60% 70%, rgba(255,255,255,.2), transparent),
+        radial-gradient(1px 1px at 50% 50%, rgba(255,255,255,.25), transparent),
+        radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,.2), transparent),
+        radial-gradient(2px 2px at 90% 60%, rgba(255,255,255,.15), transparent),
+        radial-gradient(1px 1px at 33% 80%, rgba(255,255,255,.2), transparent);
+      background-size: 250px 250px, 400px 400px, 300px 300px, 350px 350px, 450px 450px, 320px 320px;
+      background-position: 0 0, 40px 60px, 130px 270px, 70px 100px, 200px 150px, 90px 220px;
+      animation: twinkle 120s linear infinite;
+      pointer-events: none;
+      opacity: .4;
+      z-index: 0;
+    }
+    @keyframes twinkle { 0%, 100% { opacity: .4; } 50% { opacity: .6; } }
+
+    .app{
+      width:min(1000px, 100%);
+      border:1px solid var(--stroke);
+      background: linear-gradient(145deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,.03) 100%);
+      border-radius: var(--radius);
+      overflow:hidden;
+      box-shadow: 
+        0 30px 90px rgba(0,0,0,.5),
+        0 0 1px rgba(255,255,255,.1) inset,
+        0 1px 0 rgba(255,255,255,.05) inset;
+      backdrop-filter: blur(20px);
+      position: relative;
+      z-index: 1;
+    }
+
+    .screen{ display:none; padding:28px; animation: fadeIn .5s cubic-bezier(.4,0,.2,1); }
+    .screen.active{ display:block; }
+    @keyframes fadeIn{ from{opacity:0; transform: translateY(12px)} to{opacity:1; transform: translateY(0)} }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      margin-bottom:24px;
+    }
+    .badge{
+      font-size:13px;
+      font-weight: 600;
+      color: rgba(255,255,255,.85);
+      border:1px solid var(--stroke);
+      padding:8px 14px;
+      border-radius:999px;
+      background: linear-gradient(135deg, rgba(255,51,102,.12), rgba(138,43,226,.12));
+      white-space:nowrap;
+      box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    }
+
+    h1,h2{ margin:0; letter-spacing:-.3px; font-weight: 700; }
+    h1{ font-size: clamp(26px, 4vw, 36px); line-height: 1.2; }
+    h2{ font-size: clamp(20px, 3vw, 28px); line-height: 1.3; }
+    p{ margin:12px 0 0 0; color: var(--muted); line-height:1.6; font-size: 15px; }
+
+    .btnRow{ display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; }
+    .btn{
+      border:0;
+      cursor:pointer;
+      padding:14px 24px;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 15px;
+      color:#0a0e1a;
+      background: linear-gradient(135deg, #ffd700 0%, #ffb700 100%);
+      box-shadow: 0 8px 20px rgba(255,215,0,.25), 0 2px 4px rgba(0,0,0,.2);
+      transition: all .2s cubic-bezier(.4,0,.2,1);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+      transition: left .5s;
+    }
+    .btn:hover::before { left: 100%; }
+    .btn:hover{ transform: translateY(-2px); box-shadow: 0 12px 28px rgba(255,215,0,.35), 0 4px 8px rgba(0,0,0,.25); }
+    .btn:active{ transform: translateY(0); }
+    .btn.secondary{
+      color: var(--text);
+      background: rgba(255,255,255,.08);
+      border:1px solid var(--stroke);
+      box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    }
+    .btn.secondary:hover{ background: rgba(255,255,255,.12); box-shadow: 0 6px 16px rgba(0,0,0,.2); }
+    .btn.danger{
+      color: var(--text);
+      background: linear-gradient(135deg, rgba(255,51,102,.15), rgba(255,51,102,.08));
+      border:1px solid rgba(255,51,102,.3);
+      box-shadow: 0 4px 12px rgba(255,51,102,.15);
+    }
+    .btn.danger:hover{ background: linear-gradient(135deg, rgba(255,51,102,.2), rgba(255,51,102,.12)); box-shadow: 0 6px 16px rgba(255,51,102,.2); }
+
+    .coverGrid{ display:grid; grid-template-columns: 1.2fr 1fr; gap:24px; align-items:center; }
+    @media (max-width: 860px){ .coverGrid{grid-template-columns:1fr;} }
+
+    .card{
+      border:1px solid var(--stroke);
+      background: linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border-radius: 20px;
+      padding:24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    }
+
+    .bouquet{ width:100%; height:auto; display:block; filter: drop-shadow(0 10px 20px rgba(0,0,0,.3)); }
+    .float{ animation: floaty 4s ease-in-out infinite; transform-origin:center; }
+    @keyframes floaty{ 0%,100%{ transform: translateY(0) rotate(0deg) } 50%{ transform: translateY(-10px) rotate(2deg) } }
+
+    .galleryWrap{ display:grid; grid-template-columns: 1fr; gap: 20px; align-items:center; }
+    .photoFrame{
+      position:relative;
+      border-radius: 20px;
+      overflow:hidden;
+      border: 1px solid var(--stroke);
+      background: rgba(0,0,0,.3);
+      min-height: 480px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.3);
+    }
+    @media (max-width: 560px){ .photoFrame{ min-height: 360px; } }
+
+    .photoFrame img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+      opacity:0;
+      transform: scale(1.05);
+      transition: opacity .6s cubic-bezier(.4,0,.2,1), transform .6s cubic-bezier(.4,0,.2,1);
+    }
+    .photoFrame img.show{ opacity:1; transform: scale(1.0); }
+    .caption{
+      position:absolute;
+      left:0; right:0; bottom:0;
+      padding:20px 20px 18px 20px;
+      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.7) 40%, rgba(0,0,0,.85) 100%);
+      color: rgba(255,255,255,.95);
+      font-weight:600;
+      font-size: 16px;
+      letter-spacing:.3px;
+    }
+    .progress{ display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap: wrap; }
+    .dots{ display:flex; gap:8px; }
+    .dot{
+      width:12px; height:12px; border-radius:999px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.08);
+      transition: all .3s cubic-bezier(.4,0,.2,1);
+    }
+    .dot.on{ background: linear-gradient(135deg, #ffd700, #ffb700); border-color: rgba(255,215,0,.6); box-shadow: 0 0 12px rgba(255,215,0,.4); transform: scale(1.15); }
+
+    .askBox{ display:grid; gap:20px; grid-template-columns: 1fr; }
+    .bigQuestion{
+      text-align:center;
+      padding:28px;
+      border-radius:20px;
+      border:1px solid var(--stroke);
+      background: linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    }
+    .answerRow{ display:flex; justify-content:center; gap:16px; flex-wrap: wrap; }
+    .softMsg{
+      text-align:center;
+      padding:20px;
+      border-radius: 18px;
+      border: 1px solid var(--stroke);
+      background: linear-gradient(145deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      color: var(--muted);
+      min-height: 72px;
+      display:grid;
+      place-items:center;
+      font-size: 15px;
+    }
+
+    .finalGrid{ display:grid; grid-template-columns: 1fr 1fr; gap:24px; align-items:start; }
+    @media (max-width: 860px){ .finalGrid{grid-template-columns:1fr;} }
+    .finalImg{
+      border-radius:20px;
+      overflow:hidden;
+      border: 1px solid var(--stroke);
+      background: rgba(0,0,0,.3);
+      min-height: 360px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.3);
+    }
+    .finalImg img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+    .tiny{ font-size: 13px; color: rgba(255,255,255,.5); margin-top: 16px; text-align:center; line-height: 1.5; }
+
+    .petals-container {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 9999; overflow: hidden;
+    }
+    .petal {
+      position: absolute;
+      width: 80px; height: 90px;
+      animation: fall linear forwards, sway ease-in-out infinite;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 8px;
+    }
+    .petal::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #ff6b8a 0%, #ff4d6d 50%, #d63447 100%);
+      border-radius: 50% 50% 50% 0%;
+      transform: rotate(-45deg);
+      box-shadow: 0 4px 12px rgba(255,77,109,0.4),
+        inset 0 2px 8px rgba(255,255,255,0.3),
+        inset 0 -2px 8px rgba(139,0,20,0.3);
+      filter: blur(0.3px);
+    }
+    .petal::after {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 25%;
+      width: 35%;
+      height: 35%;
+      background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 70%);
+      border-radius: 50%;
+      transform: rotate(-45deg);
+    }
+    .petal-text {
+      font-size: 11px;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8), 0 0 8px rgba(139,0,20,0.6);
+      line-height: 1.2;
+      letter-spacing: 0.2px;
+      z-index: 10;
+      position: relative;
+      max-width: 65px;
+      word-wrap: break-word;
+      transform: rotate(45deg);
+    }
+    @keyframes fall {
+      0% { transform: translateY(-15vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.9; }
+      90% { opacity: 0.8; }
+      100% { transform: translateY(115vh) rotate(720deg); opacity: 0; }
+    }
+    @keyframes sway {
+      0%, 100% { margin-left: 0; }
+      25% { margin-left: 25px; }
+      75% { margin-left: -25px; }
+      23% { margin-left: -25px; } /* lo dejé tal cual venía */
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Hola mundo</h1>
+  <div class="petals-container" id="petalsContainer"></div>
+
+  <div class="app">
+
+    <section class="screen active" id="screenCover">
+      <div class="top">
+        <div>
+          <h1>FELIZ GRADUACION💛</h1>
+          <p>Hasta los retos mas dificiles se pueden lograr con esfuerzo creatividad y mucha ilusion.</p>
+        </div>
+        <div class="badge">🎓 ADMINISTRADORA DE EMPRESAS</div>
+      </div>
+
+      <div class="coverGrid">
+        <div class="card">
+          <!-- FOTO DE PORTADA (reemplaza el ramo de rosas) -->
+          <img
+            src="./fotos/portada.jpeg"
+            alt="Foto de portada"
+            style="
+              width:100%;
+              height:520px;
+              object-fit:cover;
+              border-radius:16px;
+              display:block;
+              box-shadow: 0 12px 40px rgba(0,0,0,.35);
+            "
+          />
+        </div>
+
+        <div>
+          <h2>Leidy Jhoana Sierra Prieto🌹</h2>
+          <p>
+            Preparé esto con tiempo porque quería que supieras que aunque las cosas no terminaron como esperaba, 
+            eres importante para mí y mereces algo bonito en tu día especial.
+          </p>
+          <div class="btnRow">
+            <button class="btn" id="btnStart">Aca Inicia Agunos Buenos Momentos ✨</button>
+            <button class="btn secondary" id="btnSkip">Ir al final</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screenGallery">
+      <div class="top">
+        <div>
+          <h2>Momentos Inolvidables Con tus seres queridos 💫</h2>
+          <p id="galleryLine">Disfrutalo,Todo No fue Malo</p>
+        </div>
+        <div class="badge" id="counter">1 / 23</div>
+      </div>
+
+      <div class="galleryWrap">
+        <div class="photoFrame">
+          <img id="photo" alt="Foto" />
+          <div class="caption" id="caption">—</div>
+        </div>
+
+        <div class="progress">
+          <div class="dots" id="dots"></div>
+          <div class="btnRow" style="margin:0;">
+            <button class="btn secondary" id="btnPrev">← Atrás</button>
+            <button class="btn" id="btnNext">Siguiente →</button>
+          </div>
+        </div>
+
+        <div class="tiny">
+          💡 Tip: Coloca tus fotos en la carpeta <b><fotos></b> con los nombres 1.jpg, 2.jpg, etc.
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screenAsk">
+      <div class="top">
+        <div>
+          <h2>Una última cosita…</h2>
+          <p>Queria Decirte Que Eres lo mas lindo que he conocido y no me arrepiento en ningun momento de haberte conocido.</p>
+        </div>
+        <div class="badge">💛</div>
+      </div>
+
+      <div class="askBox">
+        <div class="bigQuestion">
+          <h2>¿Te gustaría que hablemos?</h2>
+          <p>Sin reclamos, sin peleas, sin presión. Solo hablar bonito y con calma.</p>
+        </div>
+
+        <div class="answerRow">
+          <button class="btn" id="btnYes">Sí, hablemos 💬</button>
+          <button class="btn danger" id="btnNo">No por ahora</button>
+        </div>
+
+        <div class="softMsg" id="softMsg">
+          Sonriele a la vida Sabes ¿Porque? 🎓
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screenFinal">
+      <div class="top">
+        <div>
+          <h2 id="finalTitle">💖</h2>
+          <p id="finalText">—</p>
+        </div>
+        <div class="badge">Con Mucho Cariño y Amor</div>
+      </div>
+
+      <div class="finalGrid">
+        <div class="finalImg">
+          <img id="finalImg" alt="Imagen final" />
+        </div>
+        <div class="card">
+          <h2>Mensaje</h2>
+          <p id="finalLong">—</p>
+          <p class="tiny">Si quieres, responde este mensaje cuando te nazca. No hay afán.</p>
+        </div>
+      </div>
+
+      <div class="btnRow" style="justify-content:center;">
+        <button class="btn secondary" id="btnRestart">← Volver al inicio</button>
+      </div>
+    </section>
+
+  </div>
+
+<script>
+  // ---- CONFIG ----
+  const TOTAL = 23; // número total de fotos disponibles
+
+  // Intentamos cargar .jpg, si falla intentamos .JPG y .jpeg/.JPEG (por si Windows/tu cel guardó distinto)
+  function photoPath(n, ext){ return `./fotos/${n}.${ext}`; }
+  const exts = ["jpg","JPG","jpeg","JPEG","png","PNG"];
+
+  function setImageWithFallback(imgEl, n){
+    let k = 0;
+    const tryNext = () => {
+      if(k >= exts.length){
+        console.warn("No se encontró la foto:", n, "con extensiones", exts);
+        imgEl.removeAttribute("src");
+        return;
+      }
+      const src = photoPath(n, exts[k++]);
+      imgEl.src = src;
+    };
+    imgEl.onerror = tryNext;
+    tryNext();
+  }
+
+  // captions: si no hay para todas, muestra "—"
+  const captions = [
+    "Los pequeños momentos son los que más valen.", 
+    "Tu mirada lo decía todo.",
+    "Tu sonrisa iluminaba todo a tu alrededor.",
+    "Esa tarde fue mágica.", 
+    "Me alegra verte crecer.",
+    "Cada paso que das me llena de orgullo.",
+    "Tu esfuerzo siempre me inspiró.",
+    "Gracias por los días buenos.",
+    "Cada momento contigo fue especial.",
+    "Este lugar siempre me pareció mágico.",
+    "Recuerdo cuando reíamos sin razón.",
+    "Tu alegría es contagiosa.",
+    "Me encanta cómo ves el mundo(aclaro ese no soy yo).",
+    "Gracias por compartir tu luz.",
+    "Eres una persona increíble.",
+    "Gracias por ser tú misma.",
+    "Cada día contigo es un regalo.",
+    "Eres una inspiración constante.",
+    "Eres capaz de lograr todo lo que te propongas.",
+    "Gracias por ser parte de mi historia.",
+    "Tu valentía me asombra.",
+    "Estoy orgulloso de la persona en la que te has convertido.",
+    "Este es solo el comienzo de grandes cosas para ti."
+  ];
+
+  // ---- ELEMENTS ----
+  const screenCover  = document.getElementById('screenCover');
+  const screenGallery= document.getElementById('screenGallery');
+  const screenAsk    = document.getElementById('screenAsk');
+  const screenFinal  = document.getElementById('screenFinal');
+
+  const btnStart = document.getElementById('btnStart');
+  const btnSkip  = document.getElementById('btnSkip');
+
+  const img = document.getElementById('photo');
+  const caption = document.getElementById('caption');
+  const counter = document.getElementById('counter');
+  const dotsWrap = document.getElementById('dots');
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+
+  const btnYes = document.getElementById('btnYes');
+  const btnNo  = document.getElementById('btnNo');
+  const softMsg= document.getElementById('softMsg');
+
+  const finalTitle = document.getElementById('finalTitle');
+  const finalText  = document.getElementById('finalText');
+  const finalLong  = document.getElementById('finalLong');
+  const finalImgEl = document.getElementById('finalImg');
+  const btnRestart = document.getElementById('btnRestart');
+
+  // ---- STATE ----
+  let idx = 0;
+  let noCount = 0;
+
+  function show(screen){
+    [screenCover, screenGallery, screenAsk, screenFinal].forEach(s => s.classList.remove('active'));
+    screen.classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // preload (best effort)
+  for(let n=1;n<=TOTAL;n++){
+    const tmp = new Image();
+    tmp.src = `./fotos/${n}.jpg`;
+  }
+
+  // dots
+  function renderDots(){
+    dotsWrap.innerHTML = "";
+    for(let i=0;i<TOTAL;i++){
+      const d = document.createElement('div');
+      d.className = 'dot' + (i===idx ? ' on' : '');
+      dotsWrap.appendChild(d);
+    }
+  }
+
+  function paint(){
+    counter.textContent = `${idx+1} / ${TOTAL}`;
+    caption.textContent = captions[idx] || "—";
+    img.classList.remove('show');
+
+    // Cargar foto (idx empieza en 0, nombre empieza en 1)
+    setImageWithFallback(img, idx+1);
+
+    img.onload = () => requestAnimationFrame(()=> img.classList.add('show'));
+
+    renderDots();
+    btnPrev.disabled = idx === 0;
+    btnPrev.style.opacity = idx === 0 ? .5 : 1;
+    btnNext.textContent = (idx === TOTAL-1) ? "Ir al final →" : "Siguiente →";
+  }
+
+  // ---- FLOW ----
+  btnStart.addEventListener('click', () => {
+    show(screenGallery);
+    idx = 0;
+    paint();
+  });
+
+  btnSkip.addEventListener('click', () => {
+    show(screenAsk);
+  });
+
+  btnPrev.addEventListener('click', () => {
+    if(idx>0){ idx--; paint(); }
+  });
+
+  btnNext.addEventListener('click', () => {
+    if(idx < TOTAL-1){
+      idx++;
+      paint();
+    } else {
+      show(screenAsk);
+    }
+  });
+
+  // ---- ASK LOGIC ----
+  const noMessages = [
+    "Gracias por decirlo con honestidad. De corazón, te deseo un grado precioso 🎓",
+    "Lo comprendo. Aun así, me alegra haber compartido esto contigo. Mereces cosas bonitas.",
+    "Y ya sin insistir más: ¿te gustaría que hablemos un poco, tranquilo y sin reclamos?"
+  ];
+
+  btnNo.addEventListener('click', () => {
+    noCount++;
+    if(noCount <= 3){
+      softMsg.textContent = noMessages[noCount-1];
+      btnNo.textContent = (noCount < 3) ? "Quieres tomarte tu espacio Para pensar?" : "No, gracias";
+      btnYes.textContent = (noCount < 3) ? "Quieres Hablar? 💬" : "Listo… sí, hablemos 💬";
+    } else {
+      showFinal({ yes: false });
+    }
+  });
+
+  btnYes.addEventListener('click', () => {
+    showFinal({ yes: true });
+  });
+
+  function showFinal({yes}){
+    show(screenFinal);
+
+    if(yes){
+      finalTitle.textContent = "💖 Gracias por decir que sí";
+      finalText.textContent  = "De verdad significa muchisimo para mi.";
+      finalLong.textContent  =
+        "Prometo que si hablamos, será con respeto, con calma y con cariño. " +
+        "Repito nuevamente estamos orgullosos de ti por tu titulo obtenido con muchisimo esfuerzo🎓. " +
+        "Ojalá la vida te abrace bonito… y si me permites, yo también quisiera intentarlo con madurez, paso a paso.";
+
+      // final.jpg opcional con fallback a la última
+      const tryFinal = new Image();
+      tryFinal.onload = () => { finalImgEl.src = "./fotos/final.jpg"; };
+      tryFinal.onerror = () => { 
+        // usa la última foto existente
+        setImageWithFallback(finalImgEl, TOTAL);
+      };
+      tryFinal.src = "./fotos/final.jpg";
+
+    } else {
+      finalTitle.textContent = "💛 Gracias por leer";
+      finalText.textContent  = "Respeto tu decisión.";
+      finalLong.textContent  =
+        "No quiero incomodare. Solo quería tener un presente bonito y desearte lo mejor a este evento tan importamte en tu vida 🎓. " +
+        " Si algún día te nace hablar, aquí estaré, incondicionalmente.";
+
+      setImageWithFallback(finalImgEl, 1);
+    }
+  }
+
+  btnRestart.addEventListener('click', () => {
+    noCount = 0;
+    btnNo.textContent = "Quieres tomarte tu espacio Para pensar?";
+    btnYes.textContent = "Quieres Hablar? 💬";
+    softMsg.textContent = "Sea cual sea tu respuesta, Siempre Voy A Estar Para ti 💚🎓";
+    show(screenCover);
+  });
+
+  // ===== PÉTALOS CON MENSAJES =====
+  const petalsContainer = document.getElementById('petalsContainer');
+  const sweetMessages = [
+    "¡Felicidades! 🎓",
+    "Lo lograste ✨",
+    "Eres la mejor 💖",
+    "Brillas como un sol ⭐",
+    "Estamos Orgullosos de ti 🌟",
+    "Eres Increible 🦋",
+    "Sigue así 🌺",
+    "Eres Lo mejor 🌸",
+    "Eres Única 💝",
+    "Iluminas 😊",
+    "Sigue soñando en grande✨",
+    "Eres muy Fuerte 💎",
+    "Eres una fuente de inspiracion📚",
+    "Eres la mujer mas valiente que he conoccido 🌹",
+    "El inicio 🚀",
+    "Vales demasiado y hablo enserio 💕",
+    "Luz única ☀️",
+    "Tus sueños muy bonitos 🎯",
+    "Tienes un talento que no se puede comparar 🎨",
+    "Eres Brillante 💫"
+  ];
+
+  let messageIndex = 0;
+  let petalCount = 0;
+  const MAX_PETALS = 8;
+
+  function createPetal() {
+    if (petalCount >= MAX_PETALS) return;
+
+    const petal = document.createElement('div');
+    petal.className = 'petal';
+
+    const text = document.createElement('div');
+    text.className = 'petal-text';
+    text.textContent = sweetMessages[messageIndex];
+    petal.appendChild(text);
+
+    const startX = Math.random() * 95;
+    petal.style.left = `${startX}%`;
+
+    const duration = 12 + Math.random() * 8;
+    petal.style.animationDuration = `${duration}s, 2s`;
+    petal.style.animationDelay = `0s, ${Math.random() * 2}s`;
+
+    petalsContainer.appendChild(petal);
+    petalCount++;
+
+    messageIndex = (messageIndex + 1) % sweetMessages.length;
+
+    setTimeout(() => {
+      petal.remove();
+      petalCount--;
+    }, duration * 1000);
+  }
+
+  function startPetalAnimation() {
+    setInterval(() => { createPetal(); }, 800);
+  }
+
+  window.addEventListener('load', () => { setTimeout(startPetalAnimation, 1000); });
+</script>
 </body>
 </html>
